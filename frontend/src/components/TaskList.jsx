@@ -96,6 +96,7 @@ export const TaskList = ({ tasks, refreshTasks }) => {
               priority={task.priority}
               id={task.id}
               refreshTasks={refreshTasks}
+              isCompleted={task.completed}
             />
           ))}
         </div>

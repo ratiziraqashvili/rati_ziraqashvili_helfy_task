@@ -241,6 +241,22 @@ body {
   line-height: 1.75rem;
 }
 
+.task-completed {
+  background-color: #f9fafb;
+  border-color: #e5e7eb;
+  opacity: 0.8;
+  transition: all 0.3s ease;
+}
+
+.completed-text {
+  text-decoration: line-through;
+  color: #9ca3af;
+}
+
+.task-item:hover .calendar-icon {
+  opacity: 1;
+}
+
 .task-priority {
   color: white;
   font-size: 12px;
