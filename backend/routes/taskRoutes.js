@@ -42,14 +42,10 @@ taskRouter.post("/", (req, res) => {
 //update a task
 taskRouter.put("/:id", (req, res) => {
     const { id } = req.params;
-    const { title, description, priority, completed } = req.body;
+    const { title, description } = req.body;
 
-    if (!title || !description || !priority) {
-        return res.status(400).json({ error: "Title, description, and priority are required." });
-    }
-
-    if (priority !== "low" && priority !== "medium" && priority !== "high") {
-        return res.status(400).json({ error: "Priority must be 'low', 'medium', or 'high'." });
+    if (!title || !description) {
+        return res.status(400).json({ error: "Title and description are required." });
     }
 
     const taskIndex = tasks.findIndex(task => task.id === parseInt(id));
@@ -62,8 +58,6 @@ taskRouter.put("/:id", (req, res) => {
         ...tasks[taskIndex],
         title,
         description,
-        completed,
-        priority
     };
 
     res.status(200).json({ message: "Task updated successfully", task: tasks[taskIndex] });
