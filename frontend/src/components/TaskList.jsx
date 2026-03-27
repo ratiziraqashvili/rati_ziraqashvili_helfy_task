@@ -2,7 +2,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import { TaskItem } from "./TaskItem";
 import { useEffect, useRef, useState } from "react";
 
-export const TaskList = ({ tasks }) => {
+export const TaskList = ({ tasks, refreshTasks }) => {
   const scrollRef = useRef(null);
 
   console.log(tasks);
@@ -34,8 +34,6 @@ export const TaskList = ({ tasks }) => {
       });
     }
   };
-
-  const isScrolling = useRef(false);
 
   const scroll = (direction) => {
   if (scrollRef.current) {
@@ -94,8 +92,10 @@ export const TaskList = ({ tasks }) => {
               key={`${task.id}-${i}`}
               title={task.title}
               description={task.description}
-              date={task.date}
+              date={task.createdAt}
               priority={task.priority}
+              id={task.id}
+              refreshTasks={refreshTasks}
             />
           ))}
         </div>

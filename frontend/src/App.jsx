@@ -34,7 +34,7 @@ function App() {
         </header>
 
         <TaskForm refreshTasks={refreshTasks} />
-        <TaskList tasks={task} />
+        <TaskList refreshTasks={refreshTasks} tasks={task} />
       </div>
     </div>
   );

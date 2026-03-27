@@ -276,6 +276,7 @@ body {
 .date-wrapper {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   color: #6b7280;
   font-size: 0.875rem;
   line-height: 1.25rem;
@@ -285,6 +286,13 @@ body {
   width: 1rem;
   height: 1rem;
   margin-right: 0.25rem;
+}
+
+.trash-icon {
+  width: 1rem;
+  height: 1rem;
+  margin-right: 0.25rem;
+  cursor: pointer;
 }
 
 .carousel-controls {
