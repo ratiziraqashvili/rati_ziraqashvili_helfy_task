@@ -1,64 +1,95 @@
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { TaskItem } from "./TaskItem";
+import { useEffect, useRef, useState } from "react";
 
-export const TaskList = () => {
-  const initialTasks = [
-    {
-      id: 1,
-      title: "Design System Review",
-      description:
-        "Review and update the design system components for the new dashboard",
-      date: "Mar 28, 2026",
-      priority: "High",
-    },
-    {
-      id: 2,
-      title: "Client Meeting Prep",
-      description:
-        "Prepare presentation slides and demo materials for quarterly review",
-      date: "Mar 29, 2026",
-      priority: "Medium",
-    },
-    {
-      id: 3,
-      title: "Code Documentation",
-      description:
-        "Update API documentation and add examples for new endpoints",
-      date: "Mar 30, 2026",
-      priority: "Low",
-    },
-    {
-      id: 4,
-      title: "User Testing Session",
-      description:
-        "Conduct usability testing with 5 participants for the new feature",
-      date: "Mar 31, 2026",
-      priority: "High",
-    },
-    {
-      id: 5,
-      title: "Performance Optimization",
-      description:
-        "Analyze and improve load times for the main application pages",
-      date: "Apr 1, 2026",
-      priority: "Medium",
-    },
-    {
-      id: 6,
-      title: "Team Retrospective",
-      description: "Facilitate sprint retrospective and gather team feedback",
-      date: "Apr 2, 2026",
-      priority: "Low",
-    },
-  ];
+export const TaskList = ({ tasks }) => {
+  const scrollRef = useRef(null);
 
-  const displayTasks = [...initialTasks, ...initialTasks]
+  console.log(tasks);
 
+  useEffect(() => {
+    if (scrollRef.current) {
+      const container = scrollRef.current;
+      container.scrollLeft = container.scrollWidth / 3;
+    }
+  }, []);
+
+  const displayTasks = [...tasks, ...tasks, ...tasks];
+
+  const handleInfitiniteScroll = () => {
+    const container = scrollRef.current;
+    if (!container) return;
+
+    const { scrollLeft, scrollWidth, clientWidth } = container;
+    const oneThird = scrollWidth / 3;
+
+    const threshold = 10;
+
+    if (scrollLeft + clientWidth >= scrollWidth - threshold) {
+      container.scrollTo({ left: oneThird, behavior: "auto" });
+    } else if (scrollLeft <= threshold) {
+      container.scrollTo({
+        left: oneThird * 2 - clientWidth,
+        behavior: "auto",
+      });
+    }
+  };
+
+  const isScrolling = useRef(false);
+
+  const scroll = (direction) => {
+  if (scrollRef.current) {
+    const container = scrollRef.current;
+    const scrollAmount = 374;
+    const oneThird = container.scrollWidth / 3;
+
+    let currentScroll = container.scrollLeft;
+    let targetScroll = direction === "left" 
+      ? currentScroll - scrollAmount 
+      : currentScroll + scrollAmount;
+
+
+    if (direction === "right" && targetScroll + container.clientWidth > (oneThird * 2)) {
+      container.scrollTo({ left: currentScroll - oneThird, behavior: "auto" });
+      targetScroll = currentScroll - oneThird + scrollAmount;
+    } else if (direction === "left" && targetScroll < oneThird) {
+      container.scrollTo({ left: currentScroll + oneThird, behavior: "auto" });
+      targetScroll = currentScroll + oneThird - scrollAmount;
+    }
+
+    container.scrollTo({
+      left: targetScroll,
+      behavior: "smooth",
+    });
+  }
+};
   return (
     <div className="list-container">
-      <h2 className="form-heading">Active Tasks</h2>
-      <div className="carousel-viewport">
+      <div
+        className="list-header"
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
+        <h2 className="form-heading">Active Tasks</h2>
+        <div className="carousel-controls">
+          <button className="control-btn" onClick={() => scroll("left")}>
+            <ChevronLeft size={20} />
+          </button>
+          <button className="control-btn" onClick={() => scroll("right")}>
+            <ChevronRight size={20} />
+          </button>
+        </div>
+      </div>
+      <div
+        ref={scrollRef}
+        className="carousel-viewport"
+        onScroll={handleInfitiniteScroll}
+      >
         <div className="carousel-track">
-          {initialTasks.map((task, i) => (
+          {displayTasks.map((task, i) => (
             <TaskItem
               key={`${task.id}-${i}`}
               title={task.title}

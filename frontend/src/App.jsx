@@ -3,8 +3,24 @@ import { CheckCircle2 } from "lucide-react";
 import "./App.css";
 import { TaskForm } from "./components/TaskForm";
 import { TaskList } from "./components/TaskList";
+import { getAllTasks } from "./services/taskService";
 
 function App() {
+  const [task, setTask] = useState([]);
+
+  const refreshTasks = async () => {
+    try {
+      const data = await getAllTasks();
+      setTask(data);
+    } catch (error) {
+      console.error("Error refreshing tasks in App component:", error);
+    }
+  }
+
+  useEffect(() => {
+    refreshTasks();
+  }, []);
+
   return (
     <div className="main-container">
       <div className="wrapper">
@@ -17,8 +33,8 @@ function App() {
           </div>
         </header>
 
-        <TaskForm />
-        <TaskList />
+        <TaskForm refreshTasks={refreshTasks} />
+        <TaskList tasks={task} />
       </div>
     </div>
   );
