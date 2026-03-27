@@ -74,7 +74,7 @@ taskRouter.delete("/:id", (req, res) => {
     }
 
     tasks.splice(taskIndex, 1);
-    res.status(200).json({ message: "Task deleted successfully." });
+    res.status(204).send();
 });
 
 //toggle completion status of a task

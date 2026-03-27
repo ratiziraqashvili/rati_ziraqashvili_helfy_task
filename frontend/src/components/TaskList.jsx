@@ -5,8 +5,6 @@ import { useEffect, useRef, useState } from "react";
 export const TaskList = ({ tasks, refreshTasks }) => {
   const scrollRef = useRef(null);
 
-  console.log(tasks);
-
   useEffect(() => {
     if (scrollRef.current) {
       const container = scrollRef.current;
@@ -36,31 +34,40 @@ export const TaskList = ({ tasks, refreshTasks }) => {
   };
 
   const scroll = (direction) => {
-  if (scrollRef.current) {
-    const container = scrollRef.current;
-    const scrollAmount = 374;
-    const oneThird = container.scrollWidth / 3;
+    if (scrollRef.current) {
+      const container = scrollRef.current;
+      const scrollAmount = 374;
+      const oneThird = container.scrollWidth / 3;
 
-    let currentScroll = container.scrollLeft;
-    let targetScroll = direction === "left" 
-      ? currentScroll - scrollAmount 
-      : currentScroll + scrollAmount;
+      let currentScroll = container.scrollLeft;
+      let targetScroll =
+        direction === "left"
+          ? currentScroll - scrollAmount
+          : currentScroll + scrollAmount;
 
+      if (
+        direction === "right" &&
+        targetScroll + container.clientWidth > oneThird * 2
+      ) {
+        container.scrollTo({
+          left: currentScroll - oneThird,
+          behavior: "auto",
+        });
+        targetScroll = currentScroll - oneThird + scrollAmount;
+      } else if (direction === "left" && targetScroll < oneThird) {
+        container.scrollTo({
+          left: currentScroll + oneThird,
+          behavior: "auto",
+        });
+        targetScroll = currentScroll + oneThird - scrollAmount;
+      }
 
-    if (direction === "right" && targetScroll + container.clientWidth > (oneThird * 2)) {
-      container.scrollTo({ left: currentScroll - oneThird, behavior: "auto" });
-      targetScroll = currentScroll - oneThird + scrollAmount;
-    } else if (direction === "left" && targetScroll < oneThird) {
-      container.scrollTo({ left: currentScroll + oneThird, behavior: "auto" });
-      targetScroll = currentScroll + oneThird - scrollAmount;
+      container.scrollTo({
+        left: targetScroll,
+        behavior: "smooth",
+      });
     }
-
-    container.scrollTo({
-      left: targetScroll,
-      behavior: "smooth",
-    });
-  }
-};
+  };
   return (
     <div className="list-container">
       <div

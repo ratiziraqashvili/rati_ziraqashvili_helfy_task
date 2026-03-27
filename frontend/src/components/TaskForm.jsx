@@ -6,15 +6,37 @@ export const TaskForm = ({ refreshTasks }) => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [priority, setPriority] = useState("low");
+  const [errors, setErrors] = useState({});
 
   const resetForm = () => {
     setTitle("");
     setDescription("");
     setPriority("low");
-  }
+  };
+
+  const validate = () => {
+    const newErrors = {};
+    if (!title.trim()) {
+      newErrors.title = "Title is required.";
+    } else if (title.length < 3 || title.length > 50) {
+      newErrors.title = "Title must be between 3 and 50 characters.";
+    }
+
+    if (!description.trim()) {
+      newErrors.description = "Description is required.";
+    } else if (description.length > 200) {
+      newErrors.description = "Description cannot exceed 200 characters.";
+    }
+
+    setErrors(newErrors);
+
+    return Object.keys(newErrors).length === 0;
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!validate()) return;
 
     const taskData = {
       title,
@@ -51,9 +73,18 @@ export const TaskForm = ({ refreshTasks }) => {
                 id="title"
                 type="text"
                 placeholder="Enter task title"
-                className="form-input"
-                onChange={(e) => setTitle(e.target.value)}
+                className={`form-input ${errors.title ? "input-error" : ""}`}
+                value={title}
+                onChange={(e) => {
+                  setTitle(e.target.value);
+                  if (errors.title) {
+                    setErrors({ ...errors, title: null });
+                  }
+                }}
+                minLength={3}
+                maxLength={50}
               />
+              {errors.title && <p className="error-text">{errors.title}</p>}
             </div>
             <div>
               <label htmlFor="priority" className="form-label">
@@ -76,12 +107,22 @@ export const TaskForm = ({ refreshTasks }) => {
               Task Description
             </label>
             <textarea
-              onChange={(e) => setDescription(e.target.value)}
+              onChange={(e) => {
+                setDescription(e.target.value);
+                if (errors.description) {
+                  setErrors({ ...errors, description: null });
+                }
+              }}
               id="description"
               placeholder="Enter task description"
-              className="form-input"
+              className={`form-input ${errors.title ? "input-error" : ""}`}
+              value={description}
               rows={4}
+              maxLength={200}
             />
+            {errors.description && (
+              <p className="error-text">{errors.description}</p>
+            )}
           </div>
           <button type="submit" className="submit-button">
             <Plus className="plus-icon" />
