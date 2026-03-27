@@ -4,9 +4,11 @@ import "./App.css";
 import { TaskForm } from "./components/TaskForm";
 import { TaskList } from "./components/TaskList";
 import { getAllTasks } from "./services/taskService";
+import { TaskFilter } from "./components/TaskFilter";
 
 function App() {
   const [task, setTask] = useState([]);
+  const [filter, setFilter] = useState("all");
 
   const refreshTasks = async () => {
     try {
@@ -15,11 +17,17 @@ function App() {
     } catch (error) {
       console.error("Error refreshing tasks in App component:", error);
     }
-  }
+  };
 
   useEffect(() => {
     refreshTasks();
   }, []);
+
+  const filteredTasks = task.filter((t) => {
+    if (filter === "completed") return t.completed;
+    if (filter === "pending") return !t.completed;
+    return true;
+  });
 
   return (
     <div className="main-container">
@@ -34,7 +42,8 @@ function App() {
         </header>
 
         <TaskForm refreshTasks={refreshTasks} />
-        <TaskList refreshTasks={refreshTasks} tasks={task} />
+        <TaskFilter filter={filter} setFilter={setFilter} />
+        <TaskList refreshTasks={refreshTasks} tasks={filteredTasks} />
       </div>
     </div>
   );
