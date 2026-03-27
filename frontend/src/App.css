@@ -176,20 +176,35 @@ body {
 }
 
 .list-container {
-  margin-bottom: 12px;
+  margin: 0 auto 3rem auto;
+  width: 100%;
+  max-width: 80rem;
+  padding: 0 1.5rem;
 }
 
-.task-list {
+.carousel-viewport {
+  width: 100%;
   overflow: hidden;
   position: relative;
+  padding: 20px 0;
+  background: #f8f9fa;
 }
 
-.task-wrapper {
+.carousel-track {
   display: flex;
+  width: max-content;
+  animation: scroll 30s linear infinite;
   gap: 1.5rem;
 }
 
+.carousel-track:hover {
+  animation-play-state: paused;
+}
+
 .task-item {
+  flex: 0 0 350px;
+  margin: 0 15px;
+  background: white;
   background-color: white;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   border-radius: 0.5rem;
@@ -198,6 +213,15 @@ body {
   flex-shrink: 0;
   min-width: 320px;
   max-width: 320px;
+}
+
+@keyframes scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
 }
 
 .item-wrapper {
